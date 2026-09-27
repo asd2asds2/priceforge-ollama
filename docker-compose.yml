@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: priceforge-ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+    deploy:
+      resources:
+        limits:
+          memory: 10g
+        reservations:
+          memory: 4g
+    environment:
+      - OLLAMA_KEEP_ALIVE=30m
+    # Если у Portainer/Docker настроен доступ к GPU (nvidia-container-toolkit),
+    # раскомментируйте блок ниже, чтобы Ollama использовала видеокарту:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+volumes:
+  ollama_models:
+    name: priceforge_ollama_models
